@@ -6,47 +6,15 @@ import os
 #exit()
 
 
-def TranslateArr(DataWaitToTransArr):
-    
-    ResultArr = []
-    DataWaitToTrans = "\n\n".join(DataWaitToTransArr)
-    Pos = 0
-    EffectivePos = 0
-    TranslatedPos = -2
-    googletrans = translate.Translate()
-    Finish = False
-    #fw = open("test.txt","w")
-    #fw.write(DataWaitToTrans)
-        
-    while True:
-        while True:
-            Pos = DataWaitToTrans.find("\n\n",Pos+1)
-            if Pos == -1:
-                EffectivePos = len(DataWaitToTrans)+1
-                Finish = True
-                break
-            #print(Pos - TranslatedPos,Pos)
-            if Pos - TranslatedPos > 5000:
-                break
-            EffectivePos = Pos
-        
-        #print("'"+DataWaitToTrans[TranslatedPos+2:EffectivePos]+"'")
-        
-        Transresult = googletrans.TransText(DataWaitToTrans[TranslatedPos+2:EffectivePos])
-        #print(DataWaitToTrans[TranslatedPos+2:EffectivePos].split("\n\n"))
-        print(len(DataWaitToTrans[TranslatedPos+2:EffectivePos].split("\n\n")),len(Transresult.split("\n\n")))
-        if len(DataWaitToTrans[TranslatedPos+2:EffectivePos].split("\n\n")) != len(Transresult.split("\n\n")):
-            print("Fail!!!!!!!!!!!!!")
-        ResultArr.append(Transresult)
-        TranslatedPos = EffectivePos
-        if Finish:
-            print(("\n\n".join(ResultArr)).split("\n\n"))
-            return ("\n\n".join(ResultArr)).split("\n\n")
-        time.sleep(8)
-    
 
-os.rename(r".minecraft\versions\Multiblock Madness\config\betterquesting\DefaultQuests.json",r".minecraft\versions\Multiblock Madness\config\betterquesting\DefaultQuests.bak.json")
-fr = open(r".minecraft\versions\Multiblock Madness\config\betterquesting\DefaultQuests.bak.json","r")
+    
+# \.minecraft\versions\Divine Journey 2\config\betterquesting
+PackName = "Divine Journey 2"
+try:
+    os.rename(r".minecraft\versions\%s\config\betterquesting\DefaultQuests.json"%PackName,r".minecraft\versions\%s\config\betterquesting\DefaultQuests.bak.json"%PackName)
+except:
+    pass
+fr = open(r".minecraft\versions\%s\config\betterquesting\DefaultQuests.bak.json"%PackName,"r",encoding='utf-8')
 RawData = fr.read()
 fr.close()
 JsonData = json.loads(RawData)
@@ -84,13 +52,13 @@ for keys in JsonData["questDatabase:9"]:
     text = text.lstrip()
     if text == "":
         text = "No Description"
-    if len(text) >4980:
+    if len(text) >4780:
         text = "Too long, cannot be translated automaticly"
     DataWaitToTransArr.append(text)
 
 
 
-TransResultArr = TranslateArr(DataWaitToTransArr)
+TransResultArr = translate.TranslateArr(DataWaitToTransArr)
 i = 0
 print("Final:",len(JsonData["questDatabase:9"]),len(TransResultArr))
 for keys in JsonData["questDatabase:9"]:
@@ -117,7 +85,7 @@ while True:
     if Pos == -1:
             break
     RawData = RawData[:Pos+1]+RawData[Pos+1].lower()+RawData[Pos+2:]
-fw = open(r".minecraft\versions\Multiblock Madness\config\betterquesting\DefaultQuests.json","wb")
+fw = open(r".minecraft\versions\%s\config\betterquesting\DefaultQuests.json"%PackName,"wb")
 fw.write(RawData.encode("UTF-8"))
 
 fw.close()
